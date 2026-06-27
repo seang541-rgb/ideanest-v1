@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Trash2, Brain } from 'lucide-react';
 import { useLang } from '../i18n/LanguageContext';
 import { useAgentMemory } from '../hooks/useAgentMemory';
@@ -10,10 +10,26 @@ interface Props {
   signedIn: boolean;
 }
 
+const TITLE_ID = 'agent-memory-panel-title';
+
 export default function AgentMemoryPanel({ open, onClose, signedIn }: Props) {
   const { t } = useLang();
   const { rows, loading, error, forget } = useAgentMemory(open && signedIn);
   const [pendingDelete, setPendingDelete] = useState<AgentMemoryRow | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // Escape key closes the modal.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (pendingDelete) setPendingDelete(null);
+        else onClose();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, pendingDelete, onClose]);
 
   if (!open) return null;
 
@@ -28,17 +44,31 @@ export default function AgentMemoryPanel({ open, onClose, signedIn }: Props) {
 
   const handleConfirmDelete = async () => {
     if (!pendingDelete) return;
-    await forget(pendingDelete.scope, pendingDelete.fact_key, pendingDelete.project_key);
-    setPendingDelete(null);
+    setDeleteError(null);
+    try {
+      await forget(pendingDelete.scope, pendingDelete.fact_key, pendingDelete.project_key);
+      setPendingDelete(null);
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : String(err));
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={TITLE_ID}
+      onClick={(e) => {
+        // Click on the backdrop (not inside the panel) closes the modal.
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-xl">
         <div className="flex items-center justify-between gap-3 border-b border-slate-700 px-5 py-4">
           <div className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-blue-400" />
-            <span className="text-base font-semibold text-slate-100">{t('memory.title')}</span>
+            <Brain aria-hidden="true" className="h-5 w-5 text-blue-400" />
+            <span id={TITLE_ID} className="text-base font-semibold text-slate-100">{t('memory.title')}</span>
           </div>
           <button
             type="button"
@@ -91,10 +121,18 @@ export default function AgentMemoryPanel({ open, onClose, signedIn }: Props) {
         {pendingDelete && (
           <div className="border-t border-slate-700 bg-slate-800/80 px-5 py-3">
             <div className="text-sm text-slate-200">{t('memory.deleteConfirm')}</div>
+            {deleteError && (
+              <div className="mt-2 rounded border border-red-500/30 bg-red-500/10 px-2 py-1 text-xs text-red-200">
+                {deleteError}
+              </div>
+            )}
             <div className="mt-2 flex justify-end gap-2">
               <button
                 type="button"
-                onClick={() => setPendingDelete(null)}
+                onClick={() => {
+                  setPendingDelete(null);
+                  setDeleteError(null);
+                }}
                 className="rounded-lg border border-slate-600 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500"
               >
                 {t('memory.closeBtn')}

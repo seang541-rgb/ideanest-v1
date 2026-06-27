@@ -83,7 +83,12 @@ export async function deleteMemory(
  */
 export function formatMemoryForPrompt(rows: AgentMemoryRow[]): string {
   if (rows.length === 0) return '';
-  const safe = (s: string) => s.replaceAll('\n', ' ').replaceAll('```', "'''");
+  // Escape vectors that could let a malicious fact_value break out of the
+  // <memory> block or smuggle a fake system prompt: newlines (collapse to space),
+  // triple-backticks (would close a code fence), and angle brackets (would
+  // close the </memory> tag and let arbitrary text follow).
+  const safe = (s: string) =>
+    s.replaceAll('\n', ' ').replaceAll('```', "'''").replaceAll('<', '‹').replaceAll('>', '›');
 
   const userRows = rows.filter((r) => r.scope === 'user');
   const projectRows = rows.filter((r) => r.scope === 'project');
