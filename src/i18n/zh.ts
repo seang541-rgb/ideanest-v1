@@ -172,6 +172,14 @@ export const zh: Record<string, string> = {
   'copilot.send': '发送',
   'copilot.creditCost': '每次对话消耗 1 个 credit（与 Excel 导出共用同一余额）。',
   'copilot.notSignedIn': '请先登录再使用 Copilot。',
+  'memory.title': '我记得关于你的事',
+  'memory.empty': '我还没记住什么。聊聊你的工作，我会慢慢记下来。',
+  'memory.scopeUser': '关于你（全局）',
+  'memory.scopeProject': '项目',
+  'memory.deleteBtn': '忘掉',
+  'memory.deleteConfirm': '确定要忘掉这条记忆吗？',
+  'memory.closeBtn': '关闭',
+  'memory.openBtn': '记忆',
 
   // ── BQ Mapping Panel ──
   'bq.title': 'BQ 映射仪表板',

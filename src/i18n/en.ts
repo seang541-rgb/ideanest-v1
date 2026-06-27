@@ -172,6 +172,14 @@ export const en: Record<string, string> = {
   'copilot.send': 'Send',
   'copilot.creditCost': 'Each conversation consumes 1 credit (shared balance with Excel export).',
   'copilot.notSignedIn': 'Please sign in to use Copilot.',
+  'memory.title': "What I remember about you",
+  'memory.empty': "I don't remember anything yet. Tell me about your work and I'll start picking things up.",
+  'memory.scopeUser': 'About you (global)',
+  'memory.scopeProject': 'Project',
+  'memory.deleteBtn': 'Forget',
+  'memory.deleteConfirm': 'Forget this fact?',
+  'memory.closeBtn': 'Close',
+  'memory.openBtn': 'Memory',
 
   // ── BQ Mapping Panel ──
   'bq.title': 'BQ Mapping Dashboard',
