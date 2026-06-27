@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Sparkles, Send, RefreshCw, Wrench, Loader2 } from 'lucide-react';
+import { Sparkles, Send, RefreshCw, Wrench, Loader2, Brain } from 'lucide-react';
 import { AgentSession, type AgentEvent } from '../agent/agent-client';
 import type { ToolContext } from '../agent/tools';
+import AgentMemoryPanel from './AgentMemoryPanel';
 import { useLang } from '../i18n/LanguageContext';
 
 interface ChatEntry {
@@ -32,6 +33,7 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [activeToolLabel, setActiveToolLabel] = useState<string | null>(null);
+  const [memoryOpen, setMemoryOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const baseReady = toolContext.baseComponents.length > 0;
@@ -267,6 +269,15 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
           />
           <button
             type="button"
+            onClick={() => setMemoryOpen(true)}
+            disabled={!signedIn}
+            title={t('memory.openBtn')}
+            className="inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 p-2 text-slate-400 hover:border-slate-500 hover:text-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Brain className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
             onClick={handleReset}
             disabled={busy || entries.length === 0}
             title={t('copilot.reset')}
@@ -286,6 +297,7 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
           {t('copilot.creditCost')}
         </div>
       </form>
+      <AgentMemoryPanel open={memoryOpen} onClose={() => setMemoryOpen(false)} signedIn={signedIn} />
     </div>
   );
 }
