@@ -1,7 +1,7 @@
 // @ts-nocheck
 // Supabase Edge Function: agent-proxy (DeepSeek V4 Flash backend, OpenAI-compatible)
-// Auth + credit check via direct Supabase REST calls.
-// Migrated from NVIDIA NIM (Llama 3.3 70B) on 2026-06-11.
+// Auth + credit check via direct Supabase REST calls. Persistent memory loader.
+// Migrated from NVIDIA NIM (Llama 3.3 70B) on 2026-06-11; memory injection 2026-06-11.
 
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 
@@ -76,12 +76,39 @@ serve(async (request) => {
         ? rpcJson.credits_balance
         : null;
 
-    // 4. Call DeepSeek V4 Flash (OpenAI-compatible, synchronous)
+    // 4. Fetch the user's agent memory and prepend it to the system prompt.
+    // We use PostgREST with the user's JWT so RLS filters to their rows only.
+    // Best-effort: failure leaves the agent without memory but doesn't break the turn.
+    let memoryBlock = '';
+    try {
+      const memRes = await fetch(
+        `${supabaseUrl}/rest/v1/agent_memory?select=id,scope,project_key,fact_key,fact_value,updated_at&order=scope.asc,updated_at.desc`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'apikey': anonKey,
+            'Accept': 'application/json',
+          },
+        },
+      );
+      if (memRes.ok) {
+        const rows = await memRes.json();
+        if (Array.isArray(rows) && rows.length > 0) {
+          memoryBlock = formatMemoryBlock(rows);
+        }
+      }
+    } catch (_err) {
+      // ignore — memory is best-effort
+    }
+
+    // 5. Call DeepSeek V4 Flash (OpenAI-compatible, synchronous)
     const { messages, tools, system, model } = payload;
 
     const dsMessages = [];
-    if (typeof system === 'string' && system.trim()) {
-      dsMessages.push({ role: 'system', content: system });
+    const baseSystem = typeof system === 'string' && system.trim() ? system : '';
+    const combinedSystem = memoryBlock ? `${memoryBlock}\n\n${baseSystem}` : baseSystem;
+    if (combinedSystem) {
+      dsMessages.push({ role: 'system', content: combinedSystem });
     }
     dsMessages.push(...messages);
 
@@ -124,3 +151,44 @@ serve(async (request) => {
     return jsonResponse(500, { error: err instanceof Error ? err.message : 'Unknown server error.' });
   }
 });
+
+// ── Memory formatting (Deno-side mirror of src/agent/memory.ts) ─────────────
+// Kept duplicated rather than imported to keep the edge function self-contained.
+
+interface MemoryRow {
+  id: number;
+  scope: 'user' | 'project';
+  project_key: string | null;
+  fact_key: string;
+  fact_value: string;
+  updated_at: string;
+}
+
+function formatMemoryBlock(rows: MemoryRow[]): string {
+  // Escape vectors that could let a malicious fact_value break out of the
+  // <memory> block: newlines (collapse to space), triple-backticks (would close
+  // a code fence), and angle brackets (would close the </memory> tag early).
+  const safe = (s: string) =>
+    s.replaceAll('\n', ' ').replaceAll('```', "'''").replaceAll('<', '‹').replaceAll('>', '›');
+  const userRows = rows.filter((r) => r.scope === 'user');
+  const projectRows = rows.filter((r) => r.scope === 'project');
+  const projectGroups = new Map<string, MemoryRow[]>();
+  for (const r of projectRows) {
+    const key = r.project_key ?? '(unnamed)';
+    if (!projectGroups.has(key)) projectGroups.set(key, []);
+    projectGroups.get(key)!.push(r);
+  }
+  const parts: string[] = ['<memory>'];
+  if (userRows.length > 0) {
+    parts.push('## What I remember about this user (global)');
+    for (const r of userRows) parts.push(`- ${safe(r.fact_key)}: ${safe(r.fact_value)}`);
+    parts.push('');
+  }
+  for (const [projectKey, rs] of projectGroups) {
+    parts.push(`## What I remember about the project "${safe(projectKey)}"`);
+    for (const r of rs) parts.push(`- ${safe(r.fact_key)}: ${safe(r.fact_value)}`);
+    parts.push('');
+  }
+  parts.push('</memory>');
+  return parts.join('\n');
+}
