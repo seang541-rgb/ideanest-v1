@@ -24,6 +24,7 @@ import {
   type MsStandardRow,
   type UbblRow,
 } from './kb-lookups';
+import { upsertMemory, deleteMemory, type MemoryScope } from './memory';
 
 // ── LLM-friendly row formatters ─────────────────────────────────────────────
 // Each formatter produces a compact object with:
@@ -159,6 +160,57 @@ export const AGENT_TOOL_SCHEMAS: AnthropicToolSchema[] = [
         },
       },
       required: ['question'],
+    },
+  },
+  {
+    name: 'remember',
+    description:
+      'Save a durable fact about the user or the current project so future conversations can recall it. Call this when the user volunteers information that will plausibly matter in later sessions — examples: their role ("I am a QS"), their preferred language, the contract type of a project they are working on, the project employer name, a deadline they mentioned, or a key VO/EOT decision. Do NOT call this for transient or trivial info ("the user said hi"). Each fact is keyed by (scope, project_key, fact_key); a second call with the same key UPDATES the value. Use scope="user" for facts that apply globally; use scope="project" and supply project_key for facts that only apply to one project (e.g. the IFC filename or a project code).',
+    input_schema: {
+      type: 'object',
+      properties: {
+        scope: {
+          type: 'string',
+          enum: ['user', 'project'],
+          description: 'user = global to this user, project = bound to a specific project_key',
+        },
+        fact_key: {
+          type: 'string',
+          description: 'Short snake_case key, max 64 chars. Examples: role, preferred_language, contract_type, employer_name, last_vo_value, eot_deadline_date',
+        },
+        fact_value: {
+          type: 'string',
+          description: 'The value to remember, max 2000 chars. Plain text or compact JSON.',
+        },
+        project_key: {
+          type: 'string',
+          description: 'Required when scope="project". A stable identifier for the project — typically the base IFC filename or a short project code the user uses.',
+        },
+      },
+      required: ['scope', 'fact_key', 'fact_value'],
+    },
+  },
+  {
+    name: 'forget',
+    description:
+      'Delete a previously remembered fact by its composite key. Call this when the user explicitly tells you to forget something, or when a stored fact is now obviously wrong (e.g. user says "I changed my role to project manager" — forget the old role then remember the new one). Do not call this speculatively.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        scope: {
+          type: 'string',
+          enum: ['user', 'project'],
+        },
+        fact_key: {
+          type: 'string',
+          description: 'The exact fact_key to forget (must match a row in memory).',
+        },
+        project_key: {
+          type: 'string',
+          description: 'Required when scope="project". Same project_key originally used when the fact was remembered.',
+        },
+      },
+      required: ['scope', 'fact_key'],
     },
   },
   {
@@ -490,6 +542,66 @@ export async function executeAgentTool(
         };
       } catch (err) {
         return { error: `Knowledge base unreachable: ${err instanceof Error ? err.message : String(err)}` };
+      }
+    }
+
+    case 'remember': {
+      const scope = input.scope as MemoryScope | undefined;
+      const factKey = typeof input.fact_key === 'string' ? input.fact_key.trim() : '';
+      const factValue = typeof input.fact_value === 'string' ? input.fact_value.trim() : '';
+      const projectKey = typeof input.project_key === 'string' ? input.project_key.trim() : null;
+
+      if (scope !== 'user' && scope !== 'project') {
+        return { error: 'remember: scope must be "user" or "project".' };
+      }
+      if (!factKey || factKey.length > 64) {
+        return { error: 'remember: fact_key is required and must be 1..64 chars.' };
+      }
+      if (!factValue || factValue.length > 2000) {
+        return { error: 'remember: fact_value is required and must be 1..2000 chars.' };
+      }
+      if (scope === 'project' && (!projectKey || projectKey.length === 0)) {
+        return { error: 'remember: project_key is required when scope="project".' };
+      }
+
+      try {
+        const row = await upsertMemory(scope, factKey, factValue, scope === 'project' ? projectKey : null);
+        return {
+          instructions:
+            'Memory saved. Briefly acknowledge to the user in plain language (one short sentence). Do NOT call remember again for the same fact this turn.',
+          saved: { scope: row.scope, project_key: row.project_key, fact_key: row.fact_key, fact_value: row.fact_value },
+        };
+      } catch (err) {
+        return { error: `remember failed: ${err instanceof Error ? err.message : String(err)}` };
+      }
+    }
+
+    case 'forget': {
+      const scope = input.scope as MemoryScope | undefined;
+      const factKey = typeof input.fact_key === 'string' ? input.fact_key.trim() : '';
+      const projectKey = typeof input.project_key === 'string' ? input.project_key.trim() : null;
+
+      if (scope !== 'user' && scope !== 'project') {
+        return { error: 'forget: scope must be "user" or "project".' };
+      }
+      if (!factKey) {
+        return { error: 'forget: fact_key is required.' };
+      }
+      if (scope === 'project' && (!projectKey || projectKey.length === 0)) {
+        return { error: 'forget: project_key is required when scope="project".' };
+      }
+
+      try {
+        const deleted = await deleteMemory(scope, factKey, scope === 'project' ? projectKey : null);
+        return {
+          instructions:
+            deleted > 0
+              ? 'Fact forgotten. Briefly acknowledge to the user in one short sentence.'
+              : 'No matching fact was found, so nothing was deleted. Tell the user nothing changed.',
+          deleted,
+        };
+      } catch (err) {
+        return { error: `forget failed: ${err instanceof Error ? err.message : String(err)}` };
       }
     }
 
