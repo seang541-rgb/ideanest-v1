@@ -1,0 +1,56 @@
+name: keep-supabase-alive
+
+# Supabase Free Tier auto-pauses projects after ~7 days of inactivity.
+# This workflow hits two endpoints daily to register continuous activity:
+#   1. /rest/v1/contract_clauses — exercises the database
+#   2. /auth/v1/health           — exercises the auth gateway
+# Cost: zero (well within GitHub Actions free-tier minutes).
+
+on:
+  schedule:
+    # 08:00 UTC daily = 16:00 Malaysia time. Picked off-peak for both regions.
+    - cron: '0 8 * * *'
+  workflow_dispatch:  # manual trigger from Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST + Auth
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -e
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Missing SUPABASE_URL or SUPABASE_ANON_KEY secret."
+            exit 1
+          fi
+
+          echo "=== REST API (contract_clauses) ==="
+          REST_CODE=$(curl -sS -o /dev/null -w "%{http_code}" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "$SUPABASE_URL/rest/v1/contract_clauses?select=id&limit=1")
+          echo "HTTP $REST_CODE"
+          if [ "$REST_CODE" != "200" ]; then
+            echo "::warning::Unexpected REST status (project may be paused or RLS changed)."
+          fi
+
+          echo "=== Auth health ==="
+          AUTH_CODE=$(curl -sS -o /dev/null -w "%{http_code}" \
+            "$SUPABASE_URL/auth/v1/health")
+          echo "HTTP $AUTH_CODE"
+          if [ "$AUTH_CODE" != "200" ]; then
+            echo "::warning::Unexpected auth-health status."
+          fi
+
+          # Fail the job only if BOTH endpoints failed (so a transient REST hiccup
+          # doesn't spam failure emails as long as the project itself is alive).
+          if [ "$REST_CODE" != "200" ] && [ "$AUTH_CODE" != "200" ]; then
+            echo "::error::Both endpoints returned non-200. Project may be paused or deleted."
+            exit 1
+          fi
