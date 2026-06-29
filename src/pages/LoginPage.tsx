@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
-import { RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, RefreshCw } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { useLang } from '../i18n/LanguageContext';
+
+const workflowSteps = [
+  ['01', 'Upload', 'Base IFC, revision IFC, awarded BQ.'],
+  ['02', 'Audit', 'JKR/SMM2 quantity checks.'],
+  ['03', 'Compare', 'Commercial VO actions.'],
+  ['04', 'Review', 'BQ mapping and pending rates.'],
+  ['05', 'Export', 'Formal VO workbook.'],
+];
+
+const proofPoints = [
+  ['Local-first IFC', 'Model data stays in the browser.'],
+  ['20 free audits', 'Credits only matter at premium export.'],
+  ['QS review queue', 'Pending rates and mismatch stay visible.'],
+  ['Copilot context', 'Assistant explains the current state.'],
+];
 
 export default function LoginPage() {
   const { signIn, signUp, resetPassword } = useAuth();
@@ -27,9 +42,7 @@ export default function LoginPage() {
         await signIn(email, password);
       } else {
         const signUpMessage = await signUp(email, password);
-        if (signUpMessage) {
-          setMessage(signUpMessage);
-        }
+        if (signUpMessage) setMessage(signUpMessage);
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Authentication failed.');
@@ -38,124 +51,166 @@ export default function LoginPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.16),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.12),_transparent_28%),linear-gradient(180deg,_#020617_0%,_#0f172a_52%,_#020617_100%)] px-6 py-10 text-slate-100">
-      <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <section className="space-y-6 rounded-[2rem] border border-slate-700/50 bg-slate-900/70 p-8 shadow-[0_20px_80px_rgba(2,6,23,0.45)] backdrop-blur-xl lg:p-10">
-          <div className="inline-flex items-center gap-3 rounded-full border border-blue-600/20 bg-blue-600/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-blue-400">
-            <ShieldCheck size={14} /> {t('login.badge')}
-          </div>
-          <div className="space-y-4">
-            <h1 className="max-w-2xl text-4xl font-black leading-tight text-white lg:text-5xl">
-              {t('login.heading')}
-            </h1>
-            <p className="max-w-2xl text-base leading-7 text-slate-400 lg:text-lg">
-              {t('login.description')}
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-700/50 bg-slate-800/70 p-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{t('login.outputTitle')}</div>
-              <div className="mt-3 text-xl font-bold text-white">{t('login.outputSubtitle')}</div>
-              <div className="mt-2 text-sm leading-6 text-slate-400">{t('login.outputDescription')}</div>
-            </div>
-            <div className="rounded-2xl border border-slate-700/50 bg-slate-800/70 p-5">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{t('login.creditsTitle')}</div>
-              <div className="mt-3 text-xl font-bold text-white">{t('login.creditsSubtitle')}</div>
-              <div className="mt-2 text-sm leading-6 text-slate-400">{t('login.creditsDescription')}</div>
-            </div>
-          </div>
-        </section>
+  const title = mode === 'forgot' ? t('login.modeForgot') : mode === 'login' ? t('login.modeLogin') : t('login.modeSignup');
 
-        <section className="rounded-[2rem] border border-slate-700/50 bg-slate-900/80 p-8 shadow-[0_24px_90px_rgba(2,6,23,0.55)] backdrop-blur-xl lg:p-10">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <div className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">{t('login.secureAccess')}</div>
-              <h2 className="mt-2 text-3xl font-black text-white">{mode === 'forgot' ? t('login.modeForgot') : mode === 'login' ? t('login.modeLogin') : t('login.modeSignup')}</h2>
+  return (
+    <div className="min-h-screen bg-[radial-gradient(circle_at_72%_-12%,_rgba(34,211,238,0.12),_transparent_32%),radial-gradient(circle_at_18%_12%,_rgba(59,130,246,0.13),_transparent_28%),#030507] px-5 py-7 text-slate-100">
+      <div className="mx-auto max-w-[1440px]">
+        <header className="flex min-h-16 items-center justify-between gap-5">
+          <div className="inline-flex min-h-[54px] items-center gap-3 rounded-[14px] border border-white/10 bg-white/[0.035] px-3 py-2 shadow-[0_18px_46px_rgba(0,0,0,0.22)]">
+            <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-[11px] border border-cyan-300/15 bg-[radial-gradient(circle_at_50%_46%,_rgba(34,211,238,0.14),_rgba(59,130,246,0.08)_48%,_rgba(255,255,255,0.035))]">
+              <img src="/ideanest-symbol-transparent.png" alt="Idea Nest logo" className="h-auto w-11" />
             </div>
+            <div>
+              <div className="text-sm font-extrabold text-white">Idea Nest VO Copilot</div>
+              <div className="text-xs text-slate-400">Minimal preview direction</div>
+            </div>
+          </div>
+        </header>
+
+        <main className="grid gap-12 pt-16 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+          <section>
+            <div className="text-xs font-black uppercase tracking-[0.18em] text-cyan-400">
+              Zero model upload · QS workflow
+            </div>
+            <h1 className="mt-7 max-w-[820px] text-[46px] font-black leading-[0.98] tracking-normal text-white sm:text-[64px] lg:text-[84px]">
+              Commercial VO review, kept quiet and focused.
+            </h1>
+            <p className="mt-6 max-w-[720px] text-lg leading-8 text-slate-300 lg:text-xl">
+              A simpler Idea Nest interface for upload, audit, comparison, BQ review,
+              and Excel export. Less decoration, clearer next step, calmer risk signals.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => document.getElementById('ideanest-auth-email')?.focus()}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-blue-500 px-5 text-sm font-black text-white transition hover:bg-blue-400"
+              >
+                {t('login.btnLogin')}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('signup')}
+                className="min-h-11 rounded-lg border border-white/10 bg-transparent px-5 text-sm font-black text-blue-100 transition hover:border-blue-400/40 hover:bg-blue-500/10"
+              >
+                {t('login.tabSignup')}
+              </button>
+            </div>
+
+            <div className="mt-16 grid max-w-[960px] grid-cols-1 border-t border-white/10 sm:grid-cols-2 lg:grid-cols-5">
+              {workflowSteps.map(([step, label, copy], index) => (
+                <div key={step} className={`min-h-[116px] px-0 py-5 pr-5 ${index < workflowSteps.length - 1 ? 'lg:border-r lg:border-white/10' : ''}`}>
+                  <div className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">{step}</div>
+                  <div className="mt-3 text-base font-extrabold text-white">{label}</div>
+                  <div className="mt-1.5 text-xs leading-5 text-slate-400">{copy}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-11 grid max-w-[960px] gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {proofPoints.map(([label, copy]) => (
+                <div key={label} className="border-t border-white/10 pt-4">
+                  <div className="font-extrabold text-white">{label}</div>
+                  <div className="mt-1.5 text-sm leading-6 text-slate-400">{copy}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-white/10 bg-[#090f17]/90 p-6 shadow-[0_24px_90px_rgba(0,0,0,0.36)] backdrop-blur-xl">
+            <div className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{t('login.secureAccess')}</div>
+            <h2 className="mt-2 text-3xl font-black text-white">{title}</h2>
+
             {mode !== 'forgot' && (
-              <div className="inline-flex rounded-2xl border border-slate-700/50 bg-slate-800 p-1 text-sm">
+              <div className="mt-6 grid grid-cols-2 gap-1 rounded-[10px] border border-white/10 p-1">
                 <button
                   type="button"
-                  className={`rounded-xl px-4 py-2 font-semibold transition ${mode === 'login' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`rounded-lg px-4 py-2 text-sm font-extrabold transition ${mode === 'login' ? 'bg-[#172235] text-white' : 'text-slate-400 hover:text-slate-200'}`}
                   onClick={() => setMode('login')}
                 >
                   {t('login.tabLogin')}
                 </button>
                 <button
                   type="button"
-                  className={`rounded-xl px-4 py-2 font-semibold transition ${mode === 'signup' ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`rounded-lg px-4 py-2 text-sm font-extrabold transition ${mode === 'signup' ? 'bg-[#172235] text-white' : 'text-slate-400 hover:text-slate-200'}`}
                   onClick={() => setMode('signup')}
                 >
                   {t('login.tabSignup')}
                 </button>
               </div>
             )}
-          </div>
 
-          <form className="mt-8 space-y-5" onSubmit={submit}>
-            <label className="block space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('login.email')}</span>
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="w-full rounded-2xl border border-slate-700/50 bg-slate-800/80 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500/60 focus:ring-2 focus:ring-blue-600/20"
-                placeholder={t('login.emailPlaceholder')}
-                autoComplete="email"
-                required
-              />
-            </label>
-
-            {mode !== 'forgot' && (
+            <form className="mt-7 space-y-5" onSubmit={submit}>
               <label className="block space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{t('login.password')}</span>
+                <span className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">{t('login.email')}</span>
                 <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="w-full rounded-2xl border border-slate-700/50 bg-slate-800/80 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500/60 focus:ring-2 focus:ring-blue-600/20"
-                  placeholder={t('login.passwordPlaceholder')}
-                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                  minLength={6}
+                  id="ideanest-auth-email"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="min-h-12 w-full rounded-lg border border-white/10 bg-[#121b2a] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-500/20"
+                  placeholder={t('login.emailPlaceholder')}
+                  autoComplete="email"
                   required
                 />
               </label>
-            )}
 
-            {mode === 'login' && (
+              {mode !== 'forgot' && (
+                <label className="block space-y-2">
+                  <span className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">{t('login.password')}</span>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className="min-h-12 w-full rounded-lg border border-white/10 bg-[#121b2a] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400/60 focus:ring-2 focus:ring-blue-500/20"
+                    placeholder={t('login.passwordPlaceholder')}
+                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                    minLength={6}
+                    required
+                  />
+                </label>
+              )}
+
+              {mode === 'login' && (
+                <button
+                  type="button"
+                  className="text-xs text-blue-300 transition hover:text-blue-200"
+                  onClick={() => { setMode('forgot'); setError(''); setMessage(''); }}
+                >
+                  {t('login.forgotPassword')}
+                </button>
+              )}
+
+              {mode === 'forgot' && (
+                <button
+                  type="button"
+                  className="text-xs text-slate-400 transition hover:text-slate-200"
+                  onClick={() => { setMode('login'); setError(''); setMessage(''); }}
+                >
+                  {t('login.backToLogin')}
+                </button>
+              )}
+
+              {error && <div className="rounded-lg border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">{error}</div>}
+              {message && <div className="rounded-lg border border-cyan-400/25 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">{message}</div>}
+
               <button
-                type="button"
-                className="text-xs text-blue-400 hover:text-blue-300 transition"
-                onClick={() => { setMode('forgot'); setError(''); setMessage(''); }}
+                type="submit"
+                disabled={submitting}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-lg bg-blue-500 px-5 text-sm font-black text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {t('login.forgotPassword')}
+                {submitting ? <RefreshCw size={16} className="animate-spin" /> : <ArrowRight size={16} />}
+                {submitting ? t('login.processing') : mode === 'forgot' ? t('login.btnForgot') : mode === 'login' ? t('login.btnLogin') : t('login.btnSignup')}
               </button>
-            )}
+            </form>
 
-            {mode === 'forgot' && (
-              <button
-                type="button"
-                className="text-xs text-slate-400 hover:text-slate-200 transition"
-                onClick={() => { setMode('login'); setError(''); setMessage(''); }}
-              >
-                {t('login.backToLogin')}
-              </button>
-            )}
-
-            {error && <div className="rounded-2xl border border-red-900/70 bg-red-950/40 px-4 py-3 text-sm text-red-200">{error}</div>}
-            {message && <div className="rounded-2xl border border-emerald-900/70 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-200">{message}</div>}
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className={`flex w-full items-center justify-center gap-3 rounded-2xl px-5 py-3 text-sm font-black tracking-[0.16em] uppercase transition ${mode === 'signup' ? 'bg-emerald-500 hover:bg-emerald-400' : 'bg-blue-600 hover:bg-blue-500'} ${submitting ? 'cursor-not-allowed opacity-60' : 'text-white'}`}
-            >
-              {submitting ? <RefreshCw size={16} className="animate-spin" /> : <Sparkles size={16} />}
-              {submitting ? t('login.processing') : mode === 'forgot' ? t('login.btnForgot') : mode === 'login' ? t('login.btnLogin') : t('login.btnSignup')}
-            </button>
-          </form>
-        </section>
+            <p className="mt-5 text-xs leading-5 text-slate-400">
+              A quiet auth panel keeps focus on the product workflow instead of oversized marketing cards.
+            </p>
+          </section>
+        </main>
       </div>
     </div>
   );

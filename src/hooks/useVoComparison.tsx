@@ -202,15 +202,15 @@ export function useVoComparison(deps: {
       techStatus: action.sourceStatus,
       qsImpact: action.qsImpact,
       detail: formatCommercialDetail(action),
-      actionClass: action.action === 'Omission' ? 'text-red-400' : 'text-green-400',
-      techClass: action.sourceStatus === 'Modified' ? 'text-amber-400' : action.sourceStatus === 'Added' ? 'text-green-400' : 'text-red-400',
+      actionClass: action.action === 'Omission' ? 'text-amber-300' : 'text-green-400',
+      techClass: action.sourceStatus === 'Modified' ? 'text-amber-400' : action.sourceStatus === 'Added' ? 'text-green-400' : 'text-amber-300',
       qsClass: action.qsImpact === 'ignored' ? 'text-slate-400' : 'text-emerald-400',
-      rateClass: action.rateStatus === 'forced-star-rate' ? 'font-semibold text-red-300' : action.rateStatus === 'rated' ? 'text-blue-400' : 'text-amber-300',
-      quantityRiskClass: action.quantityRisk ? 'font-semibold text-red-300' : 'text-slate-500',
+      rateClass: action.rateStatus === 'forced-star-rate' ? 'font-semibold text-amber-300' : action.rateStatus === 'rated' ? 'text-blue-400' : 'text-amber-300',
+      quantityRiskClass: action.quantityRisk ? 'font-semibold text-amber-300' : 'text-slate-500',
       amountClass: action.rateStatus === 'forced-star-rate'
-        ? 'font-semibold text-red-300'
+        ? 'font-semibold text-amber-300'
         : action.rateStatus === 'rated'
-          ? (typeof action.amount === 'number' && action.amount < 0 ? 'text-red-300' : 'text-green-300')
+          ? (typeof action.amount === 'number' && action.amount < 0 ? 'text-amber-300' : 'text-green-300')
           : 'text-amber-300',
       canFocus: !(action.action === 'Omission' && action.sourceStatus === 'Deleted') || Boolean(action.counterpart),
       focusHint: action.action === 'Omission' && action.sourceStatus === 'Deleted'

@@ -57,21 +57,21 @@ export default function ResultsTable({
   const { t } = useLang();
   return (
     <>
-      <div className="border-b border-slate-800 px-4 py-2 text-xs text-slate-500">
+      <div className="border-b border-white/10 px-4 py-2 text-xs text-slate-500">
         Commercial output now forces every technical modification into Omission + Addition rows. Each commercial row now carries Qty, Unit, Rate, Amount, the exact measurement rule applied, and the quantity source used. Quantity normalization now follows a strict fallback chain: Qto first, geometry mesh calculation second, and BBox estimate last. Any BBox fallback is marked as high risk for manual QS verification. Contract BQ rates override provisional project rates only when a QS-mounted Item Reference exists and its unit matches the system measurement unit. Click a row to focus the affected element in 3D; modified omissions will focus the visible revision counterpart.
       </div>
-      <div className="border-b border-slate-800 px-4 py-3">
+      <div className="border-b border-white/10 px-4 py-3">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-400">
           {t('results.scrollHint')}
         </div>
-        <div ref={scrollbarRef} className="overflow-x-auto overflow-y-hidden rounded-full border border-slate-700 bg-slate-800/90">
+        <div ref={scrollbarRef} className="overflow-x-auto overflow-y-hidden rounded-full border border-white/10 bg-white/[0.035]">
           <div ref={scrollbarInnerRef} className="h-4 min-w-full" />
         </div>
       </div>
       <div ref={scrollRef} className="hide-scrollbar overflow-x-auto p-4">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-700/60 text-xs uppercase tracking-[0.18em] text-slate-500">
+            <tr className="border-b border-white/10 text-xs uppercase tracking-[0.18em] text-slate-500">
               <th className="w-[7%] px-3 py-2 font-bold">{t('results.section')}</th>
               <th className="w-[10%] px-3 py-2 font-bold">{t('results.level')}</th>
               <th className="w-[8%] px-3 py-2 font-bold">{t('results.block')}</th>
@@ -104,7 +104,7 @@ export default function ResultsTable({
             {resultRows.map((row) => (
               <tr
                 key={row.key}
-                className={`border-b border-slate-700/40 align-top even:bg-slate-800/20 ${row.canFocus ? 'cursor-pointer hover:bg-slate-800/55' : 'opacity-80'} ${selectedRowKey === row.key ? 'bg-blue-950/30 ring-1 ring-inset ring-blue-500/40' : ''}`}
+                className={`border-b border-white/10 align-top even:bg-white/[0.025] ${row.canFocus ? 'cursor-pointer hover:bg-white/[0.055]' : 'opacity-80'} ${selectedRowKey === row.key ? 'bg-blue-500/10 ring-1 ring-inset ring-blue-500/40' : ''}`}
                 onClick={() => row.canFocus ? onRowClick(row.rawAction) : undefined}
                 title={row.focusHint}
               >
@@ -118,8 +118,8 @@ export default function ResultsTable({
                 <td className="px-3 py-2 text-slate-400">{row.shield}</td>
                 <td className="px-3 py-2 text-slate-300">{row.protectedQty}</td>
                 <td className="px-3 py-2 text-amber-300">{row.protectedValue}</td>
-                <td className={`py-2 ${row.alert === '-' ? 'text-slate-500' : 'font-semibold text-red-300'}`}>{row.alert}</td>
-                <td className={`py-2 ${row.starRate === '-' ? 'text-slate-500' : 'font-semibold text-orange-300'}`}>{row.starRate}</td>
+                <td className={`py-2 ${row.alert === '-' ? 'text-slate-500' : 'font-semibold text-amber-300'}`}>{row.alert}</td>
+                <td className={`py-2 ${row.starRate === '-' ? 'text-slate-500' : 'font-semibold text-amber-300'}`}>{row.starRate}</td>
                 <td className={`py-2 ${row.eotFlag === '-' ? 'text-slate-500' : 'font-semibold text-violet-300'}`}>{row.eotFlag}</td>
                 <td className="px-3 py-2 text-slate-100">{row.element}</td>
                 <td className="px-3 py-2 text-slate-300">{row.measurement}</td>

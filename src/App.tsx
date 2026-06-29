@@ -195,8 +195,8 @@ export default function App() {
   // ── JSX ───────────────────────────────────────────────────────────────
   return (
     <AuthGuard>
-      <Toaster position="top-right" toastOptions={{ style: { background: '#1e293b', color: '#e2e8f0', border: '1px solid #334155' } }} />
-      <div className="min-h-screen w-full overflow-x-hidden bg-slate-900 font-sans text-slate-300">
+      <Toaster position="top-right" toastOptions={{ style: { background: '#090f17', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.12)' } }} />
+      <div className="min-h-screen w-full overflow-x-hidden bg-[radial-gradient(circle_at_72%_-12%,_rgba(34,211,238,0.12),_transparent_32%),radial-gradient(circle_at_18%_12%,_rgba(59,130,246,0.13),_transparent_28%),#030507] font-sans text-slate-300">
       {/* ── HEADER (Idea Nest) ────────────────────────────── */}
       <AppHeader
         creditsBalance={creditsBalance}
@@ -255,10 +255,10 @@ export default function App() {
 
         {showOverviewTab ? (
           showReportPanel ? (
-            <div className="flex flex-col border-t border-slate-700 bg-slate-900">
-              <div className="border-b border-slate-800 bg-slate-800 p-3 text-xs font-bold uppercase tracking-widest text-blue-400">{t('vo.resultsTitle')}</div>
+            <div className="flex flex-col border-t border-white/10 bg-[#030507]">
+              <div className="border-b border-white/10 bg-white/[0.035] p-3 text-xs font-bold uppercase tracking-widest text-blue-400">{t('vo.resultsTitle')}</div>
               {compareState === "error" ? (
-                <div className="m-4 rounded border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-200">{compareMessage}</div>
+                <div className="m-4 rounded border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">{compareMessage}</div>
               ) : (
                 <>
                 <KPIGrid
@@ -341,7 +341,7 @@ export default function App() {
             canRunAudit={!!rvtFile && rvtConvertStatus === 'idle' && !!user}
           />
         ) : (
-          <div className="flex h-[calc(100vh-48px)] flex-col border-t border-slate-700 bg-slate-900 px-4 py-4 lg:px-6">
+          <div className="flex h-[calc(100vh-64px)] flex-col border-t border-white/10 bg-[#030507] px-4 py-4 lg:px-6">
             <div className="min-h-0 flex-1">
               <CopilotPanel
                 toolContext={agentToolContext}
@@ -361,7 +361,7 @@ export default function App() {
         </div>
       )}
       {billingError && (
-        <div className="mx-6 mt-4 rounded-2xl border border-red-900/70 bg-red-950/30 px-4 py-3 text-sm text-red-200">
+        <div className="mx-6 mt-4 rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
           {billingError}
         </div>
       )}
@@ -372,8 +372,8 @@ export default function App() {
       )}
       {showPaywall && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 px-6 backdrop-blur-sm">
-          <div className="w-full max-w-2xl rounded-[2rem] border border-slate-700 bg-slate-900/95 p-8 shadow-[0_30px_120px_rgba(2,6,23,0.75)]">
-            <div className="text-xs font-semibold uppercase tracking-[0.28em] text-red-300">{t('paywall.label')}</div>
+          <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#090f17]/95 p-8 shadow-[0_30px_120px_rgba(0,0,0,0.75)]">
+            <div className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-300">{t('paywall.label')}</div>
             <h2 className="mt-4 text-3xl font-black text-white">{t('paywall.title')}</h2>
             <p className="mt-4 max-w-xl text-base leading-7 text-slate-400">{t('paywall.message')}</p>
             <div className="mt-6 rounded-2xl border border-slate-700 bg-slate-800/70 px-4 py-4 text-sm text-slate-300">
