@@ -173,39 +173,25 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         {entries.length === 0 && (
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
-            <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
-              <div className="font-bold text-blue-300">Ready when your IFC files are.</div>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
-                Upload the project files from the left rail, then ask Copilot to compare,
-                summarize commercial impact, resolve pending rates, or prepare the VO export.
-              </p>
+          <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+            <div className="font-bold text-blue-300">Ready when your IFC files are.</div>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+              Upload the project files from the left rail, then ask Copilot to compare,
+              summarize commercial impact, resolve pending rates, or prepare the VO export.
+            </p>
 
-              <div className="mt-5 grid gap-2 md:grid-cols-2">
-                {samplePrompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    type="button"
-                    onClick={() => handleSend(prompt)}
-                    className="min-h-11 rounded-lg border border-white/10 bg-[#0b111c] px-3 text-left text-xs font-semibold text-slate-200 transition hover:border-blue-400/35 hover:bg-blue-500/10 hover:text-white"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
+            <div className="mt-5 grid gap-2 md:grid-cols-2">
+              {samplePrompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => handleSend(prompt)}
+                  className="min-h-11 rounded-lg border border-white/10 bg-[#0b111c] px-3 text-left text-xs font-semibold text-slate-200 transition hover:border-blue-400/35 hover:bg-blue-500/10 hover:text-white"
+                >
+                  {prompt}
+                </button>
+              ))}
             </div>
-
-            <aside className="rounded-xl border border-cyan-400/20 bg-cyan-400/[0.045] p-4">
-              <div className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">Next</div>
-              <div className="mt-3 text-sm font-bold text-white">
-                {compareReady ? 'Review current VO context' : 'Load IFC files to begin'}
-              </div>
-              <div className="mt-2 text-xs leading-5 text-slate-400">
-                {compareReady
-                  ? 'Ask Copilot to summarize omissions, additions, pending rates, or export readiness.'
-                  : 'Upload base IFC, revision IFC, and BQ from the left rail before running comparison.'}
-              </div>
-            </aside>
           </div>
         )}
 

@@ -47,8 +47,8 @@ export default function BQMappingPanel({
 }: BQMappingPanelProps) {
   const { t } = useLang();
   return (
-    <div className="flex flex-col border-t border-slate-700 bg-slate-900">
-      <div className="shrink-0 border-b border-slate-800 px-4 py-4">
+    <div className="flex flex-col bg-[#030507]">
+      <div className="shrink-0 border-b border-white/10 px-5 py-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="text-xs font-black uppercase tracking-[0.3em] text-emerald-400">{t('bq.title')}</div>
@@ -56,25 +56,25 @@ export default function BQMappingPanel({
           </div>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-xl border border-emerald-900/70 bg-emerald-950/20 px-4 py-3"><div className="text-[11px] uppercase tracking-[0.2em] text-emerald-300">{t('bq.mounted')}</div><div className="mt-2 text-2xl font-black text-white">{mappedLabelCount}/{mappingCandidatesCount}</div></div>
-            <div className="rounded-xl border border-red-900/70 bg-red-950/20 px-4 py-3"><div className="text-[11px] uppercase tracking-[0.2em] text-red-300">{t('bq.unmapped')}</div><div className="mt-2 text-2xl font-black text-white">{orphanRows.length}</div></div>
+            <div className="rounded-xl border border-amber-400/25 bg-amber-400/10 px-4 py-3"><div className="text-[11px] uppercase tracking-[0.2em] text-amber-300">{t('bq.unmapped')}</div><div className="mt-2 text-2xl font-black text-white">{orphanRows.length}</div></div>
             <div className="rounded-xl border border-amber-900/70 bg-amber-950/20 px-4 py-3"><div className="text-[11px] uppercase tracking-[0.2em] text-amber-300">{t('bq.pendingRates')}</div><div className="mt-2 text-2xl font-black text-white">{totalPendingRates}</div></div>
             <div className="rounded-xl border border-blue-900/70 bg-blue-950/20 px-4 py-3"><div className="text-[11px] uppercase tracking-[0.2em] text-blue-300">{t('bq.contractRated')}</div><div className="mt-2 text-2xl font-black text-white">{contractBqCount}</div></div>
           </div>
         </div>
         <div className="mt-4 grid gap-3 xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
-          <div className="rounded-xl border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-slate-300">{t('bq.awardedLabel', { name: bqFileName || t('bq.notLoadedBq'), count: String(bqItems.length) })}{bqError && <div className="mt-2 text-red-400">{bqError}</div>}{mappingError && <div className="mt-2 text-red-300">{mappingError}</div>}</div>
-          <div className="rounded-xl border border-slate-700 bg-slate-800/70 px-4 py-3 text-sm text-blue-300">{t('bq.statusLabel', { message: compareMessage })}</div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-slate-300">{t('bq.awardedLabel', { name: bqFileName || t('bq.notLoadedBq'), count: String(bqItems.length) })}{bqError && <div className="mt-2 text-amber-300">{bqError}</div>}{mappingError && <div className="mt-2 text-amber-300">{mappingError}</div>}</div>
+          <div className="rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-blue-300">{t('bq.statusLabel', { message: compareMessage })}</div>
         </div>
         {orphanRows.length > 0 && (
-          <div className="mt-4 rounded-xl border border-red-900 bg-red-950/40 px-4 py-4">
-            <div className="text-sm font-black uppercase tracking-[0.2em] text-red-200">{t('bq.unmappedWarning', { count: String(orphanInstanceCount) })}</div>
-            <div className="mt-2 text-sm text-red-300">{t('bq.unmappedDetail', { count: String(orphanRows.length) })} {orphanPreview ? `Examples: ${orphanPreview}` : ""}</div>
+          <div className="mt-4 rounded-xl border border-amber-400/25 bg-amber-400/10 px-4 py-4">
+            <div className="text-sm font-black uppercase tracking-[0.2em] text-amber-200">{t('bq.unmappedWarning', { count: String(orphanInstanceCount) })}</div>
+            <div className="mt-2 text-sm text-amber-200">{t('bq.unmappedDetail', { count: String(orphanRows.length) })} {orphanPreview ? `Examples: ${orphanPreview}` : ""}</div>
           </div>
         )}
       </div>
       <div className="px-4 pb-6">
-        <div className="flex flex-col rounded-xl border border-slate-700 bg-slate-800/80 shadow-2xl shadow-black/30">
-          <div className="shrink-0 border-b border-slate-700 bg-slate-900/80 px-5 py-4">
+        <div className="flex flex-col rounded-xl border border-white/10 bg-white/[0.025] shadow-2xl shadow-black/30">
+          <div className="shrink-0 border-b border-white/10 bg-white/[0.035] px-5 py-4">
             <div className="text-sm font-black uppercase tracking-[0.28em] text-white">{t('bq.consoleTitle')}</div>
             <div className="mt-2 text-sm text-slate-400">{t('bq.consoleDescription')}</div>
           </div>

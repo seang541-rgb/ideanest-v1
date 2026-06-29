@@ -88,25 +88,25 @@ export default function DwgPanel({ result, loading, error, onUpload }: DwgPanelP
     : [];
 
   return (
-    <div className="flex flex-col border-t border-slate-700 bg-slate-900 px-4 py-5 lg:px-6">
+    <div className="flex flex-col bg-[#030507] px-5 py-5">
       <div className="mb-4 flex items-center justify-between gap-4">
         <div>
           <div className="text-xs font-black uppercase tracking-[0.3em] text-emerald-400">{t('dwg.title')}</div>
           <p className="mt-1 text-sm text-slate-400">{t('dwg.subtitle')}</p>
         </div>
-        <button type="button" onClick={onUpload} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-500">
+        <button type="button" onClick={onUpload} className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-400">
           {t('dwg.upload')}
         </button>
       </div>
 
-      {error && <div className="mb-4 rounded-lg border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-200">{error}</div>}
+      {error && <div className="mb-4 rounded-lg border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">{error}</div>}
 
       {loading && (
-        <div className="rounded-xl border border-slate-700 bg-slate-800/60 px-4 py-10 text-center text-sm text-slate-400">{t('dwg.parsing')}</div>
+        <div className="rounded-xl border border-white/10 bg-white/[0.035] px-4 py-10 text-center text-sm text-slate-400">{t('dwg.parsing')}</div>
       )}
 
       {!loading && !result && (
-        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-800/40 px-4 py-12 text-center text-sm text-slate-500">{t('dwg.empty')}</div>
+        <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.025] px-4 py-12 text-center text-sm text-slate-500">{t('dwg.empty')}</div>
       )}
 
       {!loading && result && (
@@ -119,14 +119,14 @@ export default function DwgPanel({ result, loading, error, onUpload }: DwgPanelP
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
-            <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-4">
+            <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4">
               <div className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{t('dwg.viewerTitle')}</div>
               {result.annotatedSvg
                 ? <ZoomableSvg svg={result.annotatedSvg} hint={t('dwg.zoomHint')} resetLabel={t('dwg.reset')} />
                 : <div className="rounded-lg border border-slate-700 bg-[#0b1220] p-8 text-center text-sm text-slate-500">{t('dwg.noDrawing')}</div>}
             </div>
 
-            <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-4">
+            <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4">
               <div className="mb-3 flex items-center justify-between gap-2">
                 <div className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{t('dwg.boqTitle')}</div>
                 <button type="button" onClick={handleExport} className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-500">{t('dwg.exportBoq')}</button>
@@ -198,7 +198,7 @@ export default function DwgPanel({ result, loading, error, onUpload }: DwgPanelP
 
 function Kpi({ n, l }: { n: number | string; l: string }) {
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-800/60 px-4 py-3">
+    <div className="rounded-xl border border-white/10 bg-white/[0.035] px-4 py-3">
       <div className="truncate text-2xl font-black text-white">{n}</div>
       <div className="mt-1 truncate text-[11px] uppercase tracking-wide text-slate-500">{l}</div>
     </div>

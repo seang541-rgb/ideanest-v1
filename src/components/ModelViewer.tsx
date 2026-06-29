@@ -36,31 +36,31 @@ export default function ModelViewer({
 }: ModelViewerProps) {
   const { t } = useLang();
   return (
-    <div ref={containerRef} className="relative h-[60vh] min-h-[30rem] overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.75)] lg:h-[58vh]">
-      <div className="absolute bottom-4 left-4 z-10 rounded-lg border border-slate-300/90 bg-white/88 px-4 py-2 font-mono text-xs text-slate-700 shadow-sm backdrop-blur">{sysLog}</div>
+    <div ref={containerRef} className="relative h-[52vh] min-h-[26rem] overflow-hidden rounded-xl border border-white/10 bg-[#050911] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] lg:h-[50vh]">
+      <div className="absolute bottom-4 left-4 z-10 rounded-lg border border-white/10 bg-[#090f17]/90 px-4 py-2 font-mono text-xs text-slate-300 shadow-sm backdrop-blur">{sysLog}</div>
       <div className="absolute left-4 top-4 z-10 flex max-w-[60rem] flex-col gap-2 text-xs">
         <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-xl border border-slate-300/80 bg-white/82 px-3 py-2 text-slate-700 shadow-sm backdrop-blur">
+          <div className="rounded-xl border border-white/10 bg-[#090f17]/88 px-3 py-2 text-slate-300 shadow-sm backdrop-blur">
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{t('viewer.baseIfc')}</div>
-            <div className="mt-1 truncate font-semibold text-slate-900">{v1File ? v1File.name : t('viewer.noFile')}</div>
+            <div className="mt-1 truncate font-semibold text-white">{v1File ? v1File.name : t('viewer.noFile')}</div>
             <div className="mt-1 text-slate-500">{modelStateLabel(v1State, v1Components.length, v1File?.name ?? null)}</div>
             {v1Error && <div className="mt-1 text-red-400">{v1Error}</div>}
           </div>
-          <div className="rounded-xl border border-slate-300/80 bg-white/82 px-3 py-2 text-slate-700 shadow-sm backdrop-blur">
+          <div className="rounded-xl border border-white/10 bg-[#090f17]/88 px-3 py-2 text-slate-300 shadow-sm backdrop-blur">
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{t('viewer.revisionIfc')}</div>
-            <div className="mt-1 truncate font-semibold text-slate-900">{v2File ? v2File.name : t('viewer.noFile')}</div>
+            <div className="mt-1 truncate font-semibold text-white">{v2File ? v2File.name : t('viewer.noFile')}</div>
             <div className="mt-1 text-slate-500">{modelStateLabel(v2State, v2Components.length, v2File?.name ?? null)}</div>
             {v2Error && <div className="mt-1 text-red-400">{v2Error}</div>}
           </div>
-          <div className="rounded-xl border border-slate-300/80 bg-white/82 px-3 py-2 text-slate-700 shadow-sm backdrop-blur">
+          <div className="rounded-xl border border-white/10 bg-[#090f17]/88 px-3 py-2 text-slate-300 shadow-sm backdrop-blur">
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">{t('viewer.awardedBq')}</div>
-            <div className="mt-1 truncate font-semibold text-slate-900">{bqFileName || t('sidebar.defaultBqLibrary')}</div>
+            <div className="mt-1 truncate font-semibold text-white">{bqFileName || t('sidebar.defaultBqLibrary')}</div>
             <div className="mt-1 text-slate-500">{bqItems.length} {t('sidebar.lineItemsReady')}</div>
             {bqError && <div className="mt-1 text-red-400">{bqError}</div>}
             {mappingError && <div className="mt-1 text-red-300">{mappingError}</div>}
           </div>
-          <div className="rounded-xl border border-blue-200/90 bg-white/84 px-3 py-2 text-blue-700 shadow-sm backdrop-blur">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-500">{t('viewer.workspaceStatus')}</div>
+          <div className="rounded-xl border border-cyan-400/25 bg-cyan-400/[0.06] px-3 py-2 text-cyan-200 shadow-sm backdrop-blur">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-300">{t('viewer.workspaceStatus')}</div>
             <div className="mt-1 text-xs leading-5">{compareMessage}</div>
           </div>
         </div>

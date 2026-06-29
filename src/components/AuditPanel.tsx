@@ -16,7 +16,7 @@ interface AuditPanelProps {
 
 function KPI({ label, value, accent = 'text-slate-100' }: { label: string; value: string | number; accent?: string }) {
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2.5">
+    <div className="rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2.5">
       <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">{label}</div>
       <div className={`mt-1 text-2xl font-bold ${accent}`}>{value}</div>
     </div>
@@ -112,9 +112,9 @@ export default function AuditPanel({ auditResult, auditState, auditError, auditD
   const qtoCoverage = summary.recordCount > 0 ? Math.round((qtoCount / summary.recordCount) * 100) : 0;
 
   return (
-    <div className="flex flex-col border-t border-slate-700 bg-slate-900">
+      <div className="flex flex-col bg-[#030507]">
       {/* Header */}
-      <div className="border-b border-slate-800 bg-slate-800/80 px-4 py-3">
+      <div className="border-b border-white/10 bg-white/[0.035] px-4 py-3">
         <div className="flex items-center gap-3">
           <Zap className="h-5 w-5 text-amber-400" />
           <div>
@@ -127,7 +127,7 @@ export default function AuditPanel({ auditResult, auditState, auditError, auditD
       </div>
 
       {/* KPI Grid */}
-      <div className="border-b border-slate-800 px-4 py-3">
+      <div className="border-b border-white/10 px-4 py-3">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
           <KPI label={t('audit.elementCount')} value={summary.recordCount} accent="text-white" />
           <KPI label={t('audit.jkrCount')} value={summary.jkrCodeCount} accent="text-blue-300" />
@@ -140,10 +140,10 @@ export default function AuditPanel({ auditResult, auditState, auditError, auditD
       {/* Main BQ Table */}
       <div className="px-4 py-4">
         <div className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-blue-400">{t('audit.bqSummary')}</div>
-        <div className="overflow-auto rounded-xl border border-slate-700">
+        <div className="overflow-auto rounded-xl border border-white/10 bg-white/[0.025]">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-700/60 bg-slate-800/80 text-xs uppercase tracking-[0.18em] text-slate-500">
+              <tr className="border-b border-white/10 bg-white/[0.035] text-xs uppercase tracking-[0.18em] text-slate-500">
                 <th className="px-4 py-2.5 font-bold">{t('audit.jkrCode')}</th>
                 <th className="px-4 py-2.5 font-bold">{t('audit.description')}</th>
                 <th className="px-4 py-2.5 font-bold">{t('audit.unit')}</th>
@@ -153,7 +153,7 @@ export default function AuditPanel({ auditResult, auditState, auditError, auditD
             </thead>
             <tbody className="font-mono text-slate-300">
               {bqRows.map((row) => (
-                <tr key={row.item} className="border-b border-slate-700/40 even:bg-slate-800/20">
+                <tr key={row.item} className="border-b border-white/10 even:bg-white/[0.025]">
                   <td className="px-4 py-2 font-semibold text-slate-100">{row.item}</td>
                   <td className="px-4 py-2 text-slate-300">{row.description}</td>
                   <td className="px-4 py-2 text-slate-400">{row.unit}</td>

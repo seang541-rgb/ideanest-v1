@@ -40,7 +40,7 @@ export default function AppHeader({
           </div>
         </div>
 
-        <nav className="hidden items-center gap-1 rounded-[10px] border border-white/10 bg-[#0b111c] p-1 md:flex">
+        <nav className="hidden">
           {NAV_TABS.map(({ key, i18nKey }) => (
             <button
               key={key}

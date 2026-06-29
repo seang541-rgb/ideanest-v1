@@ -16,7 +16,7 @@ export default function GuidePage() {
   const { t } = useLang();
 
   return (
-    <div className="flex flex-col border-t border-slate-700 bg-slate-900 px-4 py-6 lg:px-6">
+    <div className="flex flex-col bg-[#030507] px-5 py-6">
       <div className="mb-6">
         <div className="text-xs font-black uppercase tracking-[0.3em] text-emerald-400">{t('guide.heading')}</div>
         <p className="mt-2 max-w-3xl text-sm text-slate-400">{t('guide.subheading')}</p>
@@ -26,7 +26,7 @@ export default function GuidePage() {
         {GUIDE_CARDS.map((card) => (
           <div
             key={card.titleKey}
-            className="rounded-2xl border border-slate-700 bg-slate-800/60 p-5 transition hover:border-slate-600 hover:bg-slate-800/80"
+            className="rounded-xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-blue-400/35 hover:bg-blue-500/10"
           >
             <div className="flex items-center gap-3">
               <span className="text-2xl">{card.icon}</span>
