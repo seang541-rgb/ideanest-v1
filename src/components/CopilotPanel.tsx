@@ -147,7 +147,7 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
   }, [baseReady, compareReady, revReady, t, toolContext.baseComponents.length, toolContext.revisionComponents.length]);
 
   return (
-    <div className="flex h-full min-h-[28rem] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#050911] shadow-[0_24px_90px_rgba(0,0,0,0.26)]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#050911] shadow-[0_24px_90px_rgba(0,0,0,0.26)]">
       <div className="flex min-h-[62px] items-center justify-between gap-4 border-b border-white/10 bg-white/[0.025] px-5">
         <div className="min-w-0">
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-cyan-400">
@@ -167,7 +167,11 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
         </button>
       </div>
 
-      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+      <div
+        ref={scrollRef}
+        data-testid="copilot-message-scroll"
+        className="min-h-0 flex-1 overflow-y-scroll px-4 py-4 pr-3 [scrollbar-color:rgba(34,211,238,0.85)_rgba(15,23,42,0.86)] [scrollbar-gutter:stable] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cyan-400/70 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-900/90"
+      >
         {entries.length === 0 && (
           <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
             <div className="font-bold text-blue-300">{t('copilot.emptyTitle')}</div>

@@ -345,7 +345,7 @@ export default function App() {
               </div>
             </div>
           </header>
-          <div className="grid min-h-[calc(100vh-152px)] grid-cols-1 xl:grid-cols-[260px_minmax(0,1fr)_280px]">
+          <div className="grid h-[calc(100vh-152px)] min-h-[34rem] grid-cols-1 overflow-hidden xl:grid-cols-[260px_minmax(0,1fr)_280px]">
         <AppSidebar
           v1File={v1File} v2File={v2File} bqFileName={bqFileName}
           v1Components={v1Components} v2Components={v2Components} bqItems={bqItems}
@@ -363,10 +363,10 @@ export default function App() {
           onResetWorkspace={resetWorkspace}
         />
 
-        <main className="min-w-0 overflow-x-hidden bg-[#030507]">
+        <main className="min-h-0 min-w-0 overflow-hidden bg-[#030507]">
 
 
-      <div className="flex min-h-full flex-col">
+      <div className="flex h-full min-h-0 flex-col">
         <div className={showOverviewTab ? '' : 'hidden'}>
           <ViewerErrorBoundary>
             <ModelViewer
@@ -490,7 +490,7 @@ export default function App() {
             canRunAudit={!!rvtFile && rvtConvertStatus === 'idle' && !!user}
           />
         ) : (
-          <div className="h-full p-4">
+          <div className="flex h-full min-h-0 p-4">
             <div className="min-h-0 flex-1">
               <CopilotPanel
                 toolContext={agentToolContext}
