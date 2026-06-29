@@ -4,19 +4,19 @@ import { useAuth } from '../auth/AuthProvider';
 import { useLang } from '../i18n/LanguageContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
-const workflowSteps = [
-  ['01', 'Upload', 'Base IFC, revision IFC, awarded BQ.'],
-  ['02', 'Audit', 'JKR/SMM2 quantity checks.'],
-  ['03', 'Compare', 'Commercial VO actions.'],
-  ['04', 'Review', 'BQ mapping and pending rates.'],
-  ['05', 'Export', 'Formal VO workbook.'],
+const workflowSteps: [string, string, string][] = [
+  ['01', 'login.workflow1Title', 'login.workflow1Copy'],
+  ['02', 'login.workflow2Title', 'login.workflow2Copy'],
+  ['03', 'login.workflow3Title', 'login.workflow3Copy'],
+  ['04', 'login.workflow4Title', 'login.workflow4Copy'],
+  ['05', 'login.workflow5Title', 'login.workflow5Copy'],
 ];
 
-const proofPoints = [
-  ['Local-first IFC', 'Model data stays in the browser.'],
-  ['20 free audits', 'Credits only matter at premium export.'],
-  ['QS review queue', 'Pending rates and mismatch stay visible.'],
-  ['Copilot context', 'Assistant explains the current state.'],
+const proofPoints: [string, string][] = [
+  ['login.proof1Title', 'login.proof1Copy'],
+  ['login.proof2Title', 'login.proof2Copy'],
+  ['login.proof3Title', 'login.proof3Copy'],
+  ['login.proof4Title', 'login.proof4Copy'],
 ];
 
 export default function LoginPage() {
@@ -64,7 +64,7 @@ export default function LoginPage() {
             </div>
             <div>
               <div className="text-sm font-extrabold text-white">Idea Nest VO Copilot</div>
-              <div className="text-xs text-slate-400">Minimal preview direction</div>
+              <div className="text-xs text-slate-400">{t('login.brandSubtitle')}</div>
             </div>
           </div>
           <LanguageSwitcher />
@@ -73,14 +73,13 @@ export default function LoginPage() {
         <main className="grid gap-12 pt-16 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
           <section>
             <div className="text-xs font-black uppercase tracking-[0.18em] text-cyan-400">
-              Zero model upload · QS workflow
+              {t('login.eyebrow')}
             </div>
             <h1 className="mt-7 max-w-[820px] text-[46px] font-black leading-[0.98] tracking-normal text-white sm:text-[64px] lg:text-[84px]">
-              Commercial VO review, kept quiet and focused.
+              {t('login.heroTitle')}
             </h1>
             <p className="mt-6 max-w-[720px] text-lg leading-8 text-slate-300 lg:text-xl">
-              A simpler Idea Nest interface for upload, audit, comparison, BQ review,
-              and Excel export. Less decoration, clearer next step, calmer risk signals.
+              {t('login.heroCopy')}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -102,20 +101,20 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-16 grid max-w-[960px] grid-cols-1 border-t border-white/10 sm:grid-cols-2 lg:grid-cols-5">
-              {workflowSteps.map(([step, label, copy], index) => (
+              {workflowSteps.map(([step, labelKey, copyKey], index) => (
                 <div key={step} className={`min-h-[116px] px-0 py-5 pr-5 ${index < workflowSteps.length - 1 ? 'lg:border-r lg:border-white/10' : ''}`}>
                   <div className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">{step}</div>
-                  <div className="mt-3 text-base font-extrabold text-white">{label}</div>
-                  <div className="mt-1.5 text-xs leading-5 text-slate-400">{copy}</div>
+                  <div className="mt-3 text-base font-extrabold text-white">{t(labelKey)}</div>
+                  <div className="mt-1.5 text-xs leading-5 text-slate-400">{t(copyKey)}</div>
                 </div>
               ))}
             </div>
 
             <div className="mt-11 grid max-w-[960px] gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {proofPoints.map(([label, copy]) => (
-                <div key={label} className="border-t border-white/10 pt-4">
-                  <div className="font-extrabold text-white">{label}</div>
-                  <div className="mt-1.5 text-sm leading-6 text-slate-400">{copy}</div>
+              {proofPoints.map(([labelKey, copyKey]) => (
+                <div key={labelKey} className="border-t border-white/10 pt-4">
+                  <div className="font-extrabold text-white">{t(labelKey)}</div>
+                  <div className="mt-1.5 text-sm leading-6 text-slate-400">{t(copyKey)}</div>
                 </div>
               ))}
             </div>
@@ -209,7 +208,7 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-5 text-xs leading-5 text-slate-400">
-              A quiet auth panel keeps focus on the product workflow instead of oversized marketing cards.
+              {t('login.submitHelp')}
             </p>
           </section>
         </main>

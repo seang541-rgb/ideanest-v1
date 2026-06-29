@@ -58,29 +58,30 @@ function WorkspaceContextPanel({
   auditState,
   dwgItemCount,
 }: WorkspaceContextPanelProps) {
+  const { t } = useLang();
   const nextTitle = activeTab === 'valuation'
-    ? 'Confirm BQ mappings'
+    ? t('workspace.nextBqTitle')
     : activeTab === 'audit'
-      ? 'Run quantity audit'
+      ? t('workspace.nextAuditTitle')
       : activeTab === 'dwg'
-        ? 'Upload DWG drawing'
+        ? t('workspace.nextDwgTitle')
         : compareState === 'success'
-          ? 'Resolve pending rates'
-          : 'Load IFC files to begin';
+          ? t('workspace.nextRatesTitle')
+          : t('workspace.nextLoadTitle');
 
   const nextCopy = activeTab === 'valuation'
-    ? `${mappedLabelCount}/${mappingCandidatesCount} QS descriptions mounted.`
+    ? t('workspace.nextBqCopy', { mapped: mappedLabelCount, total: mappingCandidatesCount })
     : activeTab === 'audit'
-      ? auditState === 'done' ? 'Audit report is ready for review.' : 'Run JKR/SMM2 checks after loading an IFC.'
+      ? auditState === 'done' ? t('workspace.nextAuditDoneCopy') : t('workspace.nextAuditCopy')
       : activeTab === 'dwg'
-        ? dwgItemCount > 0 ? `${dwgItemCount} DWG takeoff items detected.` : 'Parse a DWG to create reviewable BOQ rows.'
+        ? dwgItemCount > 0 ? t('workspace.nextDwgDoneCopy', { count: dwgItemCount }) : t('workspace.nextDwgCopy')
         : compareState === 'success'
-          ? `${totalPendingRates} rows need pricing before export.`
-          : 'Upload base IFC, revision IFC, and BQ from the left rail before comparison.';
+          ? t('workspace.nextRatesCopy', { count: totalPendingRates })
+          : t('workspace.nextLoadCopy');
 
   return (
     <aside className="hidden h-full min-h-[44rem] border-l border-white/10 bg-[#070b11] px-5 py-5 xl:block">
-      <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Next</div>
+      <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">{t('workspace.nextLabel')}</div>
       <div className="mt-3 rounded-lg border border-cyan-400/25 bg-cyan-400/[0.055] p-4">
         <div className="text-base font-black text-white">{nextTitle}</div>
         <div className="mt-2 text-sm leading-6 text-slate-300">{nextCopy}</div>
@@ -88,27 +89,27 @@ function WorkspaceContextPanel({
 
       <div className="mt-5 space-y-4">
         <div className="border-b border-white/10 pb-4">
-          <div className="text-base font-black text-amber-300">{totalPendingRates} pending rates</div>
-          <div className="mt-1 text-sm text-slate-400">Likely Star Rate build-up.</div>
+          <div className="text-base font-black text-amber-300">{t('workspace.pendingRatesMetric', { count: totalPendingRates })}</div>
+          <div className="mt-1 text-sm text-slate-400">{t('workspace.pendingRatesCopy')}</div>
         </div>
         <div className="border-b border-white/10 pb-4">
-          <div className="text-base font-black text-amber-300">{totalHighRiskQuantityItems} quantity reviews</div>
-          <div className="mt-1 text-sm text-slate-400">Confirm fallback quantities before export.</div>
+          <div className="text-base font-black text-amber-300">{t('workspace.quantityReviewsMetric', { count: totalHighRiskQuantityItems })}</div>
+          <div className="mt-1 text-sm text-slate-400">{t('workspace.quantityReviewsCopy')}</div>
         </div>
         <div className="border-b border-white/10 pb-4">
-          <div className="text-base font-black text-cyan-300">{totalRatedActions} export-ready</div>
-          <div className="mt-1 text-sm text-slate-400">Rows can already enter the workbook.</div>
+          <div className="text-base font-black text-cyan-300">{t('workspace.exportReadyMetric', { count: totalRatedActions })}</div>
+          <div className="mt-1 text-sm text-slate-400">{t('workspace.exportReadyCopy')}</div>
         </div>
         <div className="border-b border-white/10 pb-4">
-          <div className="text-base font-black text-white">{totalCommercialOmissions + totalCommercialAdditions} VO actions</div>
-          <div className="mt-1 text-sm text-slate-400">{totalCommercialOmissions} omissions, {totalCommercialAdditions} additions.</div>
+          <div className="text-base font-black text-white">{t('workspace.voActionsMetric', { count: totalCommercialOmissions + totalCommercialAdditions })}</div>
+          <div className="mt-1 text-sm text-slate-400">{t('workspace.voActionsCopy', { omissions: totalCommercialOmissions, additions: totalCommercialAdditions })}</div>
         </div>
       </div>
 
       <div className="mt-7 rounded-lg border border-white/10 bg-white/[0.035] p-4">
-        <div className="text-base font-black text-white">Copilot</div>
+        <div className="text-base font-black text-white">{t('workspace.copilotTitle')}</div>
         <div className="mt-2 text-sm leading-6 text-slate-300">
-          I can prepare a short review list from the current tab and highlight blockers for QS follow-up.
+          {t('workspace.copilotCopy')}
         </div>
       </div>
     </aside>
@@ -313,19 +314,19 @@ export default function App() {
         <section className="overflow-hidden rounded-2xl border border-white/10 bg-[#050911] shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
           <header className="grid min-h-[60px] grid-cols-1 border-b border-white/10 bg-[#070b11] xl:grid-cols-[260px_minmax(0,1fr)_280px]">
             <div className="border-b border-white/10 px-5 py-3 xl:border-b-0 xl:border-r xl:border-white/10">
-              <div className="text-sm font-black text-white">Idea Nest · VO Review</div>
+              <div className="text-sm font-black text-white">{t('workspace.title')}</div>
               <div className="mt-1 text-xs text-slate-400">
-                {v1File ? 'Base loaded' : 'Base pending'} · {v2File ? 'Revision loaded' : 'Revision pending'} · {bqItems.length > 0 ? 'BQ ready' : 'BQ pending'}
+                {v1File ? t('workspace.baseLoaded') : t('workspace.basePending')} · {v2File ? t('workspace.revisionLoaded') : t('workspace.revisionPending')} · {bqItems.length > 0 ? t('workspace.bqReady') : t('workspace.bqPending')}
               </div>
             </div>
             <div className="flex items-center justify-center gap-1 px-4 py-3">
-              {[
-                ['copilot', 'Copilot'],
-                ['overview', 'VO Results'],
-                ['audit', 'Audit'],
-                ['valuation', 'BQ Mapping'],
-                ['dwg', 'DWG'],
-              ].map(([key, label]) => (
+              {([
+                ['copilot', 'header.tab.copilot'],
+                ['overview', 'workspace.tabResults'],
+                ['audit', 'header.tab.audit'],
+                ['valuation', 'workspace.tabBqMapping'],
+                ['dwg', 'header.tab.dwg'],
+              ] as const).map(([key, labelKey]) => (
                 <button
                   key={key}
                   type="button"
@@ -334,13 +335,13 @@ export default function App() {
                     activeTab === key ? 'bg-[#172235] text-white' : 'text-slate-400 hover:bg-white/[0.035] hover:text-white'
                   }`}
                 >
-                  {label}
+                  {t(labelKey)}
                 </button>
               ))}
             </div>
             <div className="hidden items-center justify-end px-5 xl:flex">
               <div className="rounded-full border border-cyan-400/25 bg-cyan-400/5 px-3 py-1.5 text-xs font-black text-cyan-300">
-                Credits {creditsLoading ? '...' : creditsBalance ?? '-'}
+                {t('header.credits')} {creditsLoading ? '...' : creditsBalance ?? '-'}
               </div>
             </div>
           </header>
@@ -389,13 +390,13 @@ export default function App() {
             <div className="flex flex-col border-t border-white/10 bg-[#030507]">
               <div className="flex items-end justify-between gap-4 px-5 py-5">
                 <div>
-                  <h2 className="text-2xl font-black text-white">VO Results</h2>
-                  <p className="mt-1 text-sm text-slate-400">Only the numbers and review blockers that matter right now.</p>
+                  <h2 className="text-2xl font-black text-white">{t('workspace.resultsTitle')}</h2>
+                  <p className="mt-1 text-sm text-slate-400">{t('workspace.resultsCopy')}</p>
                 </div>
                 <div className="hidden gap-2 md:flex">
-                  <span className="rounded-full border border-cyan-400/25 px-3 py-1 text-xs font-bold text-cyan-300">All</span>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-slate-400">Pending</span>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-slate-400">Mismatch</span>
+                  <span className="rounded-full border border-cyan-400/25 px-3 py-1 text-xs font-bold text-cyan-300">{t('workspace.filterAll')}</span>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-slate-400">{t('workspace.filterPending')}</span>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-slate-400">{t('workspace.filterMismatch')}</span>
                 </div>
               </div>
               {compareState === "error" ? (
@@ -432,10 +433,9 @@ export default function App() {
             </div>
           ) : (
             <section className="border-t border-white/10 px-5 py-10">
-              <h2 className="text-2xl font-black text-white">VO Results</h2>
+              <h2 className="text-2xl font-black text-white">{t('workspace.resultsTitle')}</h2>
               <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
-                Run VO Comparison after both IFC files are loaded. The results table,
-                quantity blockers, pending rates, and export readiness will appear here.
+                {t('workspace.resultsEmptyCopy')}
               </p>
             </section>
           )

@@ -140,14 +140,10 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
   };
 
   const statusLine = useMemo(() => {
-    const base = statusText(baseReady, `${toolContext.baseComponents.length} components`, t('copilot.notLoaded'));
-    const rev = statusText(revReady, `${toolContext.revisionComponents.length} components`, t('copilot.notLoaded'));
+    const base = statusText(baseReady, t('copilot.componentCount', { count: toolContext.baseComponents.length }), t('copilot.notLoaded'));
+    const rev = statusText(revReady, t('copilot.componentCount', { count: toolContext.revisionComponents.length }), t('copilot.notLoaded'));
     const compare = compareReady ? t('copilot.cached') : t('copilot.notRun');
-    return [
-      `Base IFC: ${base}`,
-      `Revision IFC: ${rev}`,
-      `Comparison: ${compare}`,
-    ].join(' | ');
+    return t('copilot.statusLine', { base, revision: rev, compare });
   }, [baseReady, compareReady, revReady, t, toolContext.baseComponents.length, toolContext.revisionComponents.length]);
 
   return (
@@ -174,10 +170,9 @@ export default function CopilotPanel({ toolContext, signedIn, onCreditsUpdate }:
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         {entries.length === 0 && (
           <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
-            <div className="font-bold text-blue-300">Ready when your IFC files are.</div>
+            <div className="font-bold text-blue-300">{t('copilot.emptyTitle')}</div>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
-              Upload the project files from the left rail, then ask Copilot to compare,
-              summarize commercial impact, resolve pending rates, or prepare the VO export.
+              {t('copilot.emptyCopy')}
             </p>
 
             <div className="mt-5 grid gap-2 md:grid-cols-2">
