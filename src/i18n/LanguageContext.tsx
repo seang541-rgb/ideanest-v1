@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { en } from './en';
 import { zh } from './zh';
+import { ms } from './ms';
 
-export type Lang = 'en' | 'zh';
+export type Lang = 'en' | 'zh' | 'ms';
 
-const dictionaries: Record<Lang, Record<string, string>> = { en, zh };
+const dictionaries: Record<Lang, Record<string, string>> = { en, zh, ms };
 
 interface LanguageContextValue {
   lang: Lang;
@@ -17,7 +18,7 @@ const STORAGE_KEY = 'ideanest-lang';
 function getInitialLang(): Lang {
   if (typeof window === 'undefined') return 'en';
   const stored = window.localStorage.getItem(STORAGE_KEY);
-  if (stored === 'zh' || stored === 'en') return stored;
+  if (stored === 'zh' || stored === 'en' || stored === 'ms') return stored;
   return 'en';
 }
 

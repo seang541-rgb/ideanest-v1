@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, RefreshCw } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
 import { useLang } from '../i18n/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const workflowSteps = [
   ['01', 'Upload', 'Base IFC, revision IFC, awarded BQ.'],
@@ -66,6 +67,7 @@ export default function LoginPage() {
               <div className="text-xs text-slate-400">Minimal preview direction</div>
             </div>
           </div>
+          <LanguageSwitcher />
         </header>
 
         <main className="grid gap-12 pt-16 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">

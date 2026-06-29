@@ -1,6 +1,7 @@
 import { Coins, HelpCircle, LogOut } from 'lucide-react';
 import { useLang } from '../i18n/LanguageContext';
 import type { ActiveTab } from '../lib/format';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface AppHeaderProps {
   creditsBalance: number | null;
@@ -25,7 +26,7 @@ export default function AppHeader({
   activeTab,
   onTabChange,
 }: AppHeaderProps) {
-  const { t, lang, setLang } = useLang();
+  const { t } = useLang();
 
   return (
     <header className="sticky top-0 z-40 min-h-16 border-b border-white/10 bg-[#030507]/95 backdrop-blur-xl">
@@ -75,13 +76,7 @@ export default function AppHeader({
             <span className="hidden text-[10px] font-black uppercase tracking-wider sm:inline">{t('header.credits')}</span>
             <span className="text-xs font-black text-white">{creditsLoading ? '...' : creditsBalance ?? '-'}</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}
-            className="h-9 rounded-lg border border-white/10 bg-[#0b111c] px-3 text-[11px] font-black text-slate-300 transition hover:text-white"
-          >
-            {lang === 'en' ? '中文' : 'EN'}
-          </button>
+          <LanguageSwitcher />
           <button
             type="button"
             onClick={onSignOut}
