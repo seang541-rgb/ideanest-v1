@@ -80,7 +80,7 @@ function WorkspaceContextPanel({
           : t('workspace.nextLoadCopy');
 
   return (
-    <aside className="hidden h-full min-h-[44rem] border-l border-white/10 bg-[#070b11] px-5 py-5 xl:block">
+    <aside className="hidden h-full min-h-0 overflow-y-auto border-l border-white/10 bg-[#070b11] px-5 py-5 xl:block">
       <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">{t('workspace.nextLabel')}</div>
       <div className="mt-3 rounded-lg border border-cyan-400/25 bg-cyan-400/[0.055] p-4">
         <div className="text-base font-black text-white">{nextTitle}</div>
@@ -315,7 +315,7 @@ export default function App() {
           <header className="grid min-h-[60px] grid-cols-1 border-b border-white/10 bg-[#070b11] xl:grid-cols-[260px_minmax(0,1fr)_280px]">
             <div className="border-b border-white/10 px-5 py-3 xl:border-b-0 xl:border-r xl:border-white/10">
               <div className="text-sm font-black text-white">{t('workspace.title')}</div>
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs leading-4 text-slate-400">
                 {v1File ? t('workspace.baseLoaded') : t('workspace.basePending')} · {v2File ? t('workspace.revisionLoaded') : t('workspace.revisionPending')} · {bqItems.length > 0 ? t('workspace.bqReady') : t('workspace.bqPending')}
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function App() {
               </div>
             </div>
           </header>
-          <div className="grid h-[calc(100vh-152px)] min-h-[34rem] grid-cols-1 overflow-hidden xl:grid-cols-[260px_minmax(0,1fr)_280px]">
+          <div className="grid h-[calc(100dvh-168px)] min-h-0 grid-cols-1 overflow-hidden xl:grid-cols-[260px_minmax(0,1fr)_280px]">
         <AppSidebar
           v1File={v1File} v2File={v2File} bqFileName={bqFileName}
           v1Components={v1Components} v2Components={v2Components} bqItems={bqItems}

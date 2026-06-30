@@ -55,7 +55,7 @@ export default function AppSidebar({
   const hasAnyFile = v1File !== null || v2File !== null;
 
   return (
-    <aside className="flex h-full min-h-[44rem] flex-col gap-4 overflow-y-auto border-r border-white/10 bg-[#070b11] px-4 py-4">
+    <aside className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto border-r border-white/10 bg-[#070b11] px-4 py-4">
       {/* Workspace files */}
       <section>
         <div className="mb-2 flex items-center justify-between">
